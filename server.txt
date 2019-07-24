@@ -1,0 +1,15 @@
+;发送任务列表
+6998
+;请求处理任务
+6999
+;端口号
+26383
+26384
+
+;socks5代理模式
+socks5,26385,test,test1
+;端口代理模式  端口，目标ip，目标端口
+proxy,26382, cq.lsiding.com, 80
+;http代理模式  端口，目标ip，目标端口，只支持get post，CONNECT模式，get,post两种模式，访问端口，将会被直接做端口转发，会修改HOST，等头部信息，如果get 或者post 的路径是全局路径（http://xxxx.com/xxx.xxx）那表示使用普通代理host会被xxxx.com代替
+;CONNECT  隧道代理模式，解析CONNECT，并做打开链接通道，做端口数据转发，目标和目标端口由CONNECT指定
+httpproxy,26381, cq.lsiding.com, 80

@@ -1,0 +1,1 @@
+java -Xmx256m -Dfile.encoding=gbk -cp lsiding-xcode-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.lsiding.xcode.XClassLoader com.lsiding.nat.server.Server main 2>&1 | tee client.log.txt
