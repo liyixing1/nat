@@ -1,2 +1,188 @@
-# nat
-网络穿透,网络遨游,内网穿透,穿透,网络转接
+# nat 穿透引擎
+
+## 什么是nat
+
+nat是由java实现的网络穿透器
+包含了
+**基础的代理功能**
+ - socks5代理
+ - http代理
+ - 端口转发
+ **内网穿透**
+**基于jee（web引擎）服务器的nat**
+可以与
+ - 基础的代理功能
+ - 内网穿透功能
+ 自由组合使用，以达到基于jee功能的网络穿透，代理等功能
+
+
+### 1. 基础代理功能 
+针对基础代理，可以百度一下，相关资料，这些都是基础功能不需要很多描述
+- [x] socks5代理
+- [x] http代理
+- [x] 端口转发
+
+### 2. 内网穿透
+
+让我们用例子来说明内网穿透
+
+假设你公司有一台电脑CA（开启了远程服务器）,你有一台可以使用的服务器SA。
+你在家中电脑CB，想要链接到电脑CA，但是CA是属于公司内网内的网络节点，家中无法访问。
+那么可以通过nat提供的功能访问到CA。
+CA开启nat客户端
+SA开启nat服务端
+
+```seq
+CA->SA: 你好,我要接受来自你1234端口的数据
+SA-->CA: 没有收到请求，测试下网络状态吧
+CB->SA: 我链接你的1234端口
+SA->CA: 有人链接到我的1234端口
+CA->SA: 请把1234交给我处理吧
+CB->SA: 123
+SA->CA: 丫发了个123过来
+CA->SA: 那帮我给丫回复个456吧
+SA->CB: 456
+```
+
+### 3. 基于web（JEE）引擎的nat穿透
+此功能主要针对，当你的服务器只允许开放一个端口给公网，比如80，而且，这个80端口，是有比如tomcat提供服务的。
+**注意，如果你的tomcat的前面还有一个反向代理转发到实际的tomcat，nat穿透引擎目前还不支持。**
+
+上面的例子就会变成
+CA开启nat客户端（含web适配器 CAA）
+SA把nat引擎提供的servlet(也可以自己实现)加入到web.xml
+CB开启web适配器（CBB）
+
+```seq
+CA->CAA: 我要接受来自你1234端口的数据
+CAA-SAWEB: http适配（我要接受来自你1234端口的数据）
+SAWEB-->CAA: 回复HTTP BODY（没有收到请求，测试下网络状态吧）
+CAA-->CA: http适配（没有收到请求，测试下网络状态吧）
+CB->CBB: 你好，我链接你的1234端口
+CBB->SAWEB: http适配（你好，我链接你的1234端口）
+SAWEB->CAA: 回复HTTP BODY（有人链接到我的1234端口）
+CAA->CA: HTTP适配（有人链接到我的1234端口）
+CA->CAA: 请把1234交给我处理吧
+CAA->SAWEB: HTTP适配（请把1234交给我处理吧）
+CB->SA: 123
+SAWEB->CAA: 回复HTTP BODY（丫发了个123过来）
+CAA->CA: HTTP适配（丫发了个123过来）
+CA->CAA: 那帮我给丫回复个456吧
+CAA->SAWEB: HTTP适配（那帮我给丫回复个456吧）
+SAWEB->CBB: 回复HTTP BODY（456）
+CBB->CB: HTTP适配（456）
+```
+
+servlet自己实现需要完成以下基本功能
+```java
+package com.lsiding.nat.server.web;
+
+import java.io.IOException;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.lsiding.xcode.XClassLoader;
+
+public class WebProxyMain extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private String sKey = null;
+
+	public void init(ServletConfig config) throws ServletException {
+		sKey = config.getInitParameter("sKey");
+
+		try {
+			Object SOCKS5_PROXY = XClassLoader.getStaticValue(
+					"com.lsiding.nat.server.web.WebProxy", "SOCKS5_PROXY");
+			XClassLoader.runMethod(SOCKS5_PROXY, "setUsername",
+					config.getInitParameter("s5usernmae"));
+			XClassLoader.runMethod(SOCKS5_PROXY, "setPassword",
+					config.getInitParameter("s5password"));
+			XClassLoader.setStaticValue("com.lsiding.nat.server.web.WebProxy",
+					"maxContentLength", Integer.valueOf(config
+							.getInitParameter("maxContentLength")));
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public WebProxyMain() {
+		super();
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		Object webProxy;
+		try {
+			webProxy = XClassLoader.runMethod(
+					"com.lsiding.nat.server.web.WebProxy", "getInstance", sKey);
+			XClassLoader.runMethod(webProxy, "hand", request, response);
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}
+
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<!-- 挂载nat的servlet -->
+	<servlet>
+		<servlet-name>webProxyMain</servlet-name>
+		<servlet-class>com.lsiding.nat.server.web.WebProxyMain</servlet-class>
+
+		<!-- 这几个参数必须 -->
+		<!-- skey需要和web适配器中的密码对应起来 -->
+		<init-param>
+			<param-name>sKey</param-name>
+			<param-value>123</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>s5usernmae</param-name>
+			<param-value>test</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>s5password</param-name>
+			<param-value>test1</param-value>
+		</init-param>
+		
+		<!-- 最大body，由web引擎参数决定 -->
+		<init-param>
+			<param-name>maxContentLength</param-name>
+			<param-value>102400</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>webProxyMain</servlet-name>
+		<url-pattern>/web_proxy.html</url-pattern>
+	</servlet-mapping>
+</web-app>
+```
