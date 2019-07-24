@@ -16,6 +16,19 @@ nat是由java实现的网络穿透器
  自由组合使用，以达到基于jee功能的网络穿透，代理等功能
 
 
+##使用
+服务端
+ - 服务端xcode.bat
+ - server.txt
+
+客户端
+ - 客户端xcode.bat
+ - client.txt
+
+ git提供的client.txt配置文件是一个经过测试可用的配置，与本人提供的测试服务器对接。
+ 启动客户端，浏览器打开代理功能，代理IP 127.0.0.1  端口 26390
+ 注意此测试服务器性能网络不是很好，请不要疯狂试用~~~~~~~~~
+
 ### 1. 基础代理功能 
 针对基础代理，可以百度一下，相关资料，这些都是基础功能不需要很多描述
 - [x] socks5代理
@@ -31,6 +44,9 @@ nat是由java实现的网络穿透器
 那么可以通过nat提供的功能访问到CA。
 CA开启nat客户端
 SA开启nat服务端
+
+![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/1.png "在这里输入图片标题")
+
 
 ```seq
 CA->SA: 你好,我要接受来自你1234端口的数据
@@ -53,18 +69,21 @@ CA开启nat客户端（含web适配器 CAA）
 SA把nat引擎提供的servlet(也可以自己实现)加入到web.xml
 CB开启web适配器（CBB）
 
+
+![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/2.png "在这里输入图片标题")
+
 ```seq
 CA->CAA: 我要接受来自你1234端口的数据
 CAA-SAWEB: http适配（我要接受来自你1234端口的数据）
 SAWEB-->CAA: 回复HTTP BODY（没有收到请求，测试下网络状态吧）
 CAA-->CA: http适配（没有收到请求，测试下网络状态吧）
-CB->CBB: 你好，我链接你的1234端口
-CBB->SAWEB: http适配（你好，我链接你的1234端口）
+CB->CBB: 你好，我链接你的4567端口
+CBB->SAWEB: http适配（你好，我链接你的1234（适配器的4567转化成1234）端口）
 SAWEB->CAA: 回复HTTP BODY（有人链接到我的1234端口）
 CAA->CA: HTTP适配（有人链接到我的1234端口）
 CA->CAA: 请把1234交给我处理吧
 CAA->SAWEB: HTTP适配（请把1234交给我处理吧）
-CB->SA: 123
+CB->CBB: 123
 SAWEB->CAA: 回复HTTP BODY（丫发了个123过来）
 CAA->CA: HTTP适配（丫发了个123过来）
 CA->CAA: 那帮我给丫回复个456吧
@@ -186,3 +205,12 @@ public class WebProxyMain extends HttpServlet {
 	</servlet-mapping>
 </web-app>
 ```
+
+### 为什么不开源？
+代码写的这么差，怎么好意思开源呢~~~~~~~~~~~~
+
+### 支援一波
+由螺丝钉网络提供  
+如果你觉得这个产品有点意思，可以捐赠一下  
+支付宝：459387495@qq.com  
+商业合作，获取源码授权等，联系QQ：459387495  
