@@ -90,7 +90,7 @@ web,26391,www.lsiding.com,8100,/test/web_proxy.html,123,SOCKS5_PROXY,102400
 
 
 ```seq
-CLIENT->SERVER(6998):我要处理26383,26384任务
+CLIENT->SERVER(6998):我要处理112233,112234任务
 SERVER(6998)-->CLIENT:还没有任务过来，测试下网络状态
 USERCASE1->SERVER(112233):我链接啦
 SERVER(6998)->CLIENT:呆子，有人请求处理一个112233的任务
