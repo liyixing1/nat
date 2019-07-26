@@ -200,9 +200,6 @@ public class WebProxyMain extends HttpServlet {
 					config.getInitParameter("s5usernmae"));
 			XClassLoader.runMethod(SOCKS5_PROXY, "setPassword",
 					config.getInitParameter("s5password"));
-			XClassLoader.setStaticValue("com.lsiding.nat.server.web.WebProxy",
-					"maxContentLength", Integer.valueOf(config
-							.getInitParameter("maxContentLength")));
 		} catch (Exception e) {
 		}
 	}
