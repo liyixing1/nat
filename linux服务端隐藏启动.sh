@@ -35,7 +35,7 @@ function stop(){
 
 
 	#解析出进程
-	pid=$(ps -ef | grep $path | grep -v 'grep' | awk '{print $2}')
+	pid=$(ps -ef | grep "lsiding-xcode-0.0.1-SNAPSHOT-jar-with-dependencies.jar" | grep -v 'grep' | awk '{print $2}')
 	echo "当前路径是：${path}"
 	if [ -n "$pid" ];then
 		#这里判断进程是否存在
@@ -82,7 +82,7 @@ restart)
 	start
 	;;
 *)
-        echo $"执行: $0，参数：{start|stop|restart|update}"
+        echo $"执行: $0，参数：{start|stop|restart}"
         exit 1
         ;;
 esac
