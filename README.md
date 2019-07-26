@@ -86,7 +86,7 @@ web,26391,www.lsiding.com,8100,/test/web_proxy.html,123,SOCKS5_PROXY,102400
 内网穿透是基于任务概念完成的，当有目前链接到穿透服务器的端口112233   
 我们称为这个行为为任务，编号是112233  
 穿透服务器与穿透客户端的交互逻辑  
-![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/3.png "在这里输入图片标题")   
+![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/3.png?v=1 "在这里输入图片标题")   
 
 
 ```seq
@@ -118,7 +118,7 @@ SERVER(112233)->USERCASE1:老纸不爱！
 CA开启nat客户端  
 SA开启nat服务端  
 
-![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/1.png "在这里输入图片标题")
+![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/1.png?v=1 "在这里输入图片标题")
 
 
 ```seq
@@ -146,7 +146,7 @@ SA把nat引擎提供的servlet(也可以自己实现)加入到web.xml
 CB开启web适配器（CBB）  
 
 
-![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/2.png "在这里输入图片标题")
+![输入图片说明](https://lsiding-common.oss-cn-shanghai.aliyuncs.com/nat/2.png?v=1 "在这里输入图片标题")
 
 ```seq
 CA->CAA: 我要接受来自你1234端口的数据
