@@ -85,6 +85,28 @@ web,26389,www.lsiding.com,8100,/test/web_proxy.html,123,JOBGET:26383,102400
 web,26390,www.lsiding.com,8100,/test/web_proxy.html,123,HTTP_PROXY,102400  
 web,26391,www.lsiding.com,8100,/test/web_proxy.html,123,SOCKS5_PROXY,102400  
 
+
+**基于WEB**   
+基于WEB的模式，servlet不需要特殊的配置内容，需要要设置servlet的关键参数   
+```java
+<init-param>
+      <param-name>sKey</param-name>
+      <param-value>123</param-value>
+    </init-param>
+    <init-param>
+      <param-name>s5usernmae</param-name>
+      <param-value>test</param-value>
+    </init-param>
+    <init-param>
+      <param-name>s5password</param-name>
+      <param-value>test1</param-value>
+    </init-param>
+    <init-param>
+      <param-name>maxContentLength</param-name>
+      <param-value>1024000</param-value>
+</init-param>
+```
+
 **说明一下任务发送，任务处理**  
 内网穿透是基于任务概念完成的，当有目前链接到穿透服务器的端口112233   
 我们称为这个行为为任务，编号是112233  
