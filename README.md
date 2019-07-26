@@ -73,7 +73,7 @@ SA->CB: 456
 **注意，此功能受到web引擎的限制，数据超长会自动抛弃数据，出现比如远程操作几秒后会卡住。**  
 **如果不想被截断，请设置足够大的maxPostSize。**
 **下个版本将会修复反向代理的情况**    
-**目前测试，tomcat request body 超过达到10MB会断开SOCKET**   
+**git提供的默认配置只有10MB的request body大小**   
 上面的例子就会变成  
 CA开启nat客户端（含web适配器 CAA）  
 SA把nat引擎提供的servlet(也可以自己实现)加入到web.xml  
