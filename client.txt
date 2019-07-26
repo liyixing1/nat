@@ -10,11 +10,11 @@
 26388
 ;6999
 ;目标ip，目标端口，nat穿透主服务器收到的链接请求端口
-127.0.0.1,3389,26383
+47.97.194.7,3389,26383
 ;http穿透模式
 http,cq.lsiding.com,80,26384
 ;web适配器,本地端口，适配的目标web服务器，web服务器端口，web服务器接受的链接，密码，处理的目标位置,web body最大数（Content-Length），需要根据目标web服务器的设置参数，设置该值
-web,26386,www.lsiding.com,8100,/test/web_proxy.html,123,127.0.0.1:3389,102400
+web,26386,www.lsiding.com,8100,/test/web_proxy.html,123,47.97.194.7:3389,102400
 web,26387,www.lsiding.com,8100,/test/web_proxy.html,123,SEND,102400
 web,26388,www.lsiding.com,8100,/test/web_proxy.html,123,HAND,102400
 web,26389,www.lsiding.com,8100,/test/web_proxy.html,123,JOBGET:26383,102400
