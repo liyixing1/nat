@@ -74,7 +74,7 @@ httpproxy,26381, cq.lsiding.com, 80
 6999  
 ;目标ip，目标端口，nat穿透主服务器收到的链接请求端口  
 127.0.0.1,3389,26383  
-;http穿透模式  
+;http代理模式  
 http,cq.lsiding.com,80,26384  
 ;web适配器,本地端口，适配的目标web服务器，web服务器端口，web服务器接受的链接  
 ;密码，处理的目标位置,web-body最大数（Content-Length），需要根据目标web服务器的设置参数  
@@ -88,8 +88,8 @@ web,26391,www.lsiding.com,8100,/test/web_proxy.html,123,SOCKS5_PROXY,102400
 
 ## 基于WEB  
 基于WEB的模式，servlet不需要特殊的配置内容，需要要设置servlet的关键参数   
-```java
-<init-param>
+```xml
+    <init-param>
       <param-name>sKey</param-name>
       <param-value>123</param-value>
     </init-param>
@@ -101,10 +101,6 @@ web,26391,www.lsiding.com,8100,/test/web_proxy.html,123,SOCKS5_PROXY,102400
       <param-name>s5password</param-name>
       <param-value>test1</param-value>
     </init-param>
-    <init-param>
-      <param-name>maxContentLength</param-name>
-      <param-value>1024000</param-value>
-</init-param>
 ```
 
 **说明一下任务发送，任务处理**  
@@ -288,13 +284,6 @@ public class WebProxyMain extends HttpServlet {
 			<param-name>s5password</param-name>
 			<param-value>test1</param-value>
 		</init-param>
-		
-		<!-- 最大body，由web引擎参数决定 -->
-		<init-param>
-			<param-name>maxContentLength</param-name>
-			<param-value>102400</param-value>
-		</init-param>
-
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -306,7 +295,7 @@ public class WebProxyMain extends HttpServlet {
 ```
 
 ### 为什么不开源？
-代码写的这么差，怎么好意思开源呢~~~~~~~~~~~~
+用就好了，源代码，那是程序员才需要的东西~~~~~~~~~~~~~~~
 
 ### 支援一波
 由螺丝钉网络提供  
